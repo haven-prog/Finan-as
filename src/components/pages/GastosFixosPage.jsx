@@ -1,183 +1,145 @@
 import { useState } from 'react'
 import { useFinance } from '../../context/FinanceContext.jsx'
-import GFModal from '../modals/GFModal.jsx'
-import Confirm from '../modals/Confirm.jsx'
-import { fmt } from '../../utils.js'
+import GFModal   from '../modals/GFModal.jsx'
+import Confirm   from '../modals/Confirm.jsx'
+import TxModal   from '../modals/TxModal.jsx'
+import { fmt }   from '../../utils.js'
+import { MES_ATUAL } from '../../constants.js'
 
 export default function GastosFixosPage({ onOpenTxForGf }) {
-  const { txs, gfs, goals, gfData, dispatch } = useFinance()
-  const [exp,    setExp]    = useState(null)
-  const [editGf, setEditGf] = useState(null)
-  const [newGf,  setNewGf]  = useState(false)
-  const [delGf,  setDelGf]  = useState(null)
+  const { txs, gfs, goals, dispatch } = useFinance()
+  const [expanded, setExpanded] = useState(null)
+  const [modal,    setModal]    = useState(null)
 
-  const totalLimit = gfs.reduce((s,g) => s + g.limit, 0)
-  const totalGasto = gfs.reduce((s,g) => s + (gfData[g.id]?.total || 0), 0)
-  const pendentes  = gfs.filter(g => (gfData[g.id]?.total || 0) < g.limit).length
+  const cards = gfs.map(gf => {
+    const paid  = txs.filter(t => t.gfId === gf.id && t.amount < 0)
+    const spent = paid.reduce((a, t) => a + Math.abs(t.amount), 0)
+    const pct   = gf.limit > 0 ? Math.round(spent / gf.limit * 100) : 0
+    const remaining = Math.max(0, gf.limit - spent)
+    const status = pct >= 100 ? 'over' : pct >= 80 ? 'exp' : ''
+    return { ...gf, spent, pct, remaining, status, paid }
+  })
 
-  function saveGf(g) {
-    const newGfs = editGf ? gfs.map(x => x.id===g.id ? {...x,...g} : x) : [...gfs, g]
-    dispatch({ type:'SET_GFS', gfs:newGfs })
-    setEditGf(null); setNewGf(false)
-  }
+  const totalLimit = gfs.reduce((a, g) => a + g.limit, 0)
+  const totalSpent = cards.reduce((a, g) => a + g.spent, 0)
+  const totalPct   = totalLimit > 0 ? Math.round(totalSpent / totalLimit * 100) : 0
 
   return (
     <div className="page">
       <div className="ph">
-        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-          <div style={{ fontFamily:'Instrument Serif,serif', fontSize:28, letterSpacing:'-.5px' }}>
-            Gastos Fixos
-          </div>
-          <button onClick={() => setNewGf(true)} style={{
-            background:'var(--amber-d)', border:'1px solid rgba(240,165,0,.25)',
-            color:'var(--amber)', borderRadius:20, padding:'7px 14px',
-            fontSize:12, fontWeight:600, cursor:'pointer',
-          }}>
-            + Novo
-          </button>
-        </div>
+        <div className="ph-title">Gastos Fixos</div>
+        <div className="ph-sub">{MES_ATUAL}</div>
       </div>
 
-      {/* Resumo */}
-      <div style={{ padding:'0 22px 20px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-        <div style={{ background:'var(--s1)', border:'1px solid var(--border)', borderRadius:18, padding:'16px 18px', gridColumn:'1/-1' }}>
-          <div style={{ fontSize:11, fontWeight:600, color:'var(--sub)', marginBottom:6 }}>Pago este mês</div>
-          <div style={{ display:'flex', alignItems:'flex-end', gap:8, marginBottom:10 }}>
-            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:32, letterSpacing:-1 }}>
-              {fmt(totalGasto)}
+      {/* Resumo do mês */}
+      <div style={{ margin:'0 20px 18px' }}>
+        <div className="card">
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:12 }}>
+            <div>
+              <div className="lbl">PAGO ESTE MÊS</div>
+              <div style={{ fontFamily:'Instrument Serif,serif', fontSize:34, letterSpacing:'-1px', color:'var(--txt)', margin:'4px 0 2px' }}>{fmt(totalSpent)}</div>
+              <div style={{ fontSize:12, color:'var(--sub)' }}>de {fmt(totalLimit)} planejado</div>
             </div>
-            <div style={{ fontSize:13, color:'var(--sub)', paddingBottom:4 }}>de {fmt(totalLimit)}</div>
+            <span className={`badge ${totalPct >= 100 ? 'badge-red' : totalPct >= 80 ? 'badge-gold' : 'badge-grn'}`}>
+              {totalPct}%
+            </span>
           </div>
-          <div style={{ height:4, background:'var(--s3)', borderRadius:99, overflow:'hidden', marginBottom:8 }}>
-            <div style={{
-              height:'100%', borderRadius:99, transition:'width .5s',
-              width:`${totalLimit>0?Math.min(100,(totalGasto/totalLimit)*100):0}%`,
-              background: totalGasto > totalLimit ? 'var(--coral)' : totalGasto/totalLimit > .8 ? 'var(--amber)' : 'var(--green)',
+          <div className="bar-wrap" style={{ height:5 }}>
+            <div className="bar-fill" style={{
+              width: totalPct + '%',
+              background: totalPct >= 100 ? 'var(--red)' : totalPct >= 80 ? 'var(--gold)' : 'var(--grn)'
             }}/>
           </div>
-          {pendentes > 0 && (
-            <div style={{ fontSize:11, color:'var(--sub)' }}>
-              {pendentes} conta{pendentes>1?'s':''} ainda a pagar
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Lista */}
+      {/* Lista de fixos */}
       <div className="gf-list">
-        {gfs.map(g => {
-          const d    = gfData[g.id] || { total:0, gabriel:0, gabi:0, txs:[] }
-          const pct  = g.limit > 0 ? Math.round((d.total / g.limit) * 100) : 0
-          const resto = g.limit - d.total
-          const fc   = pct >= 100 ? 'var(--coral)' : pct >= 80 ? 'var(--amber)' : 'var(--green)'
-          const open = exp === g.id
-          const linkedGoal = goals.find(gl => gl.id === g.goalId)
-
-          return (
-            <div key={g.id} className={`gf${open?' exp':''}${pct>=100?' over':''}`}>
-              <div className="gf-head" onClick={() => setExp(open ? null : g.id)}>
-                <div className="gf-top">
-                  <div className="gf-ico" style={{ background: pct>=100?'var(--coral-d)':pct>=80?'var(--amber-d)':'var(--s2)' }}>
-                    {g.icon}
-                  </div>
-                  <div className="gf-info">
-                    <div className="gf-name">{g.name}</div>
-                    <div className="gf-meta">
-                      <span>{g.owner}</span>
-                      {g.recorrente && <><div className="gf-dot"/><span>Recorrente</span></>}
-                      {linkedGoal && <><div className="gf-dot"/><span style={{ color:'var(--amber)' }}>🎯 {linkedGoal.name}</span></>}
-                    </div>
-                  </div>
-                  <div className="gf-right">
-                    <div className="gf-spent" style={{ color:fc }}>{fmt(d.total)}</div>
-                    <div className="gf-limit">de {fmt(g.limit)}</div>
-                  </div>
+        {cards.map(gf => (
+          <div key={gf.id} className={`gf-card ${gf.status}`}>
+            <div className="gf-head" onClick={() => setExpanded(expanded === gf.id ? null : gf.id)}>
+              <div className="gf-top">
+                <div className="gf-ico">{gf.icon}</div>
+                <div className="gf-info">
+                  <div className="gf-name">{gf.name}</div>
+                  <div className="gf-meta">{gf.owner} · {gf.recorrente ? 'Recorrente' : 'Avulso'}</div>
                 </div>
-
-                <div className="gf-bar">
-                  <div className="gf-fill" style={{ width:Math.min(pct,100)+'%', background:fc }}/>
+                <div className="gf-right">
+                  <div className={`gf-spent ${gf.status === 'over' ? 'c-red' : gf.status === 'exp' ? 'c-gold' : 'c-grn'}`}>
+                    {fmt(gf.spent)}
+                  </div>
+                  <div className="gf-of">de {fmt(gf.limit)}</div>
                 </div>
-                <div className="gf-foot">
-                  <div className="gf-pct">
-                    {d.total === 0
-                      ? <span style={{ color:'var(--sub)' }}>Não pago</span>
-                      : `${pct}%`
-                    }
-                  </div>
-                  <div className="gf-rest" style={{ color:resto<0?'var(--coral)':resto<g.limit*.2?'var(--amber)':'var(--green)' }}>
-                    {resto >= 0 ? `${fmt(resto)} restante` : `${fmt(Math.abs(resto))} acima`}
-                  </div>
-                </div>
-
-                {/* Split */}
-                {(d.gabriel > 0 || d.gabi > 0) && (
-                  <div className="gf-persons" style={{ marginTop:10 }}>
-                    <div className="gf-person">
-                      <div className="gf-person-av av-g">G</div>
-                      <div className="gf-person-name">Gabriel</div>
-                      <div className="gf-person-val" style={{ color:'var(--amber)' }}>{fmt(d.gabriel)}</div>
-                    </div>
-                    <div className="gf-person">
-                      <div className="gf-person-av av-a">G</div>
-                      <div className="gf-person-name">Gabi</div>
-                      <div className="gf-person-val" style={{ color:'var(--coral)' }}>{fmt(d.gabi)}</div>
-                    </div>
-                  </div>
-                )}
               </div>
-
-              {/* Expandido */}
-              {open && (
-                <div className="gf-expand">
-                  <div className="gf-acts">
-                    <button className="gf-act" onClick={() => onOpenTxForGf(g)}>
-                      <span>⬇️</span> Lançar
-                    </button>
-                    <button className="gf-act" onClick={() => setEditGf(g)}>
-                      <span>✏️</span> Editar
-                    </button>
-                    <button className="gf-act danger" onClick={() => setDelGf(g)}>
-                      <span>🗑️</span> Excluir
-                    </button>
-                  </div>
-                  <div className="gf-txs-title">Lançamentos vinculados</div>
-                  {d.txs.length === 0 ? (
-                    <div className="gf-no-tx">Nenhum lançamento ainda.</div>
-                  ) : (
-                    d.txs.map(t => (
-                      <div key={t.id} className="gf-tx">
-                        <div className="gf-tx-ic">{t.icon}</div>
-                        <div style={{ flex:1, minWidth:0 }}>
-                          <div className="gf-tx-n">{t.name}</div>
-                          <div className="gf-tx-sub">{t.date} · {t.owner}</div>
-                        </div>
-                        <div className="gf-tx-a">{fmt(Math.abs(t.amount))}</div>
-                      </div>
-                    ))
-                  )}
+              <div className="bar-wrap">
+                <div className="bar-fill" style={{
+                  width: gf.pct + '%',
+                  background: gf.pct >= 100 ? 'var(--red)' : gf.pct >= 80 ? 'var(--gold)' : 'var(--grn)'
+                }}/>
+              </div>
+              <div className="gf-foot">
+                <div className="gf-pct">{gf.pct}% utilizado</div>
+                <div className={`gf-rest ${gf.remaining <= 0 ? 'c-red' : 'c-grn'}`}>
+                  {gf.remaining <= 0 ? 'Limite atingido' : `${fmt(gf.remaining)} restante`}
                 </div>
-              )}
+              </div>
             </div>
-          )
-        })}
 
-        <button className="add-gf" onClick={() => setNewGf(true)}>
-          + Novo Gasto Fixo
+            {expanded === gf.id && (
+              <div className="gf-expand">
+                <div className="gf-acts">
+                  <button className="gf-act pri" onClick={() => setModal({ kind:'tx', gf })}>
+                    <span>💳</span> Registrar
+                  </button>
+                  <button className="gf-act" onClick={() => setModal({ kind:'edit', gf })}>
+                    <span>✏️</span> Editar
+                  </button>
+                  <button className="gf-act danger" onClick={() => setModal({ kind:'del', gf })}>
+                    <span>🗑️</span> Excluir
+                  </button>
+                </div>
+                <div className="gf-txs-title">Lançamentos vinculados</div>
+                {gf.paid.length === 0
+                  ? <div className="gf-no-tx">Nenhum lançamento ainda</div>
+                  : gf.paid.map(t => (
+                    <div key={t.id} className="gf-tx">
+                      <div className="gf-tx-ic">{t.icon}</div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div className="gf-tx-n">{t.name}</div>
+                        <div className="gf-tx-sub">{t.owner} · {t.date}</div>
+                      </div>
+                      <div className="gf-tx-amt">−{fmt(Math.abs(t.amount))}</div>
+                    </div>
+                  ))
+                }
+              </div>
+            )}
+          </div>
+        ))}
+
+        <button className="add-btn" onClick={() => setModal({ kind:'new' })}>
+          <span>＋</span> Novo Gasto Fixo
         </button>
       </div>
 
-      {(newGf || editGf) && (
-        <GFModal gf={editGf} goals={goals}
-          onClose={() => { setNewGf(false); setEditGf(null) }}
-          onSave={saveGf}/>
+      {/* Modais */}
+      {modal?.kind === 'new' && (
+        <GFModal goals={goals} onClose={() => setModal(null)}
+          onSave={gf => { dispatch({ type:'ADD_GF', gf }); setModal(null) }}/>
       )}
-      {delGf && (
-        <Confirm
-          title="Excluir gasto fixo?"
-          msg={`Excluir "${delGf.name}"? Os lançamentos vinculados perderão a referência.`}
-          onYes={() => { dispatch({ type:'SET_GFS', gfs:gfs.filter(g => g.id!==delGf.id) }); setDelGf(null); setExp(null) }}
-          onNo={() => setDelGf(null)}
-        />
+      {modal?.kind === 'edit' && (
+        <GFModal gf={modal.gf} goals={goals} onClose={() => setModal(null)}
+          onSave={gf => { dispatch({ type:'EDIT_GF', gf }); setModal(null) }}/>
+      )}
+      {modal?.kind === 'del' && (
+        <Confirm title="Excluir fixo?" msg={`Remover "${modal.gf.name}"?`}
+          onYes={() => { dispatch({ type:'DEL_GF', id:modal.gf.id }); setModal(null) }}
+          onNo={() => setModal(null)}/>
+      )}
+      {modal?.kind === 'tx' && (
+        <TxModal gfs={gfs} defaultType="out" preGfId={modal.gf.id}
+          onClose={() => setModal(null)}
+          onSave={tx => { dispatch({ type:'ADD_TX', tx }); setModal(null) }}/>
       )}
     </div>
   )

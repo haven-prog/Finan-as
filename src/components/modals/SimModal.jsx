@@ -13,7 +13,7 @@ function MiniBar({ pct, color, label, value }) {
   return (
     <div style={{ marginBottom: 8 }}>
       <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
-        <div style={{ fontSize:11, color:'var(--muted)', fontWeight:600 }}>{label}</div>
+        <div style={{ fontSize:11, color:'var(--sub)', fontWeight:600 }}>{label}</div>
         <div style={{ fontSize:12, fontWeight:700, color }}>{value}</div>
       </div>
       <div style={{ height:6, background:'var(--s3)', borderRadius:99 }}>
@@ -34,35 +34,35 @@ function GoalCard({ goal, extraMensal, highlight }) {
   const ganho     = mesesBase && mesesNovo ? mesesBase - mesesNovo : null
 
   return (
-    <div style={{ background: highlight ? 'var(--green-d)' : 'var(--s2)',
-      border:`1px solid ${highlight ? 'var(--green)' : 'var(--border)'}`,
+    <div style={{ background: highlight ? 'var(--grn-a)' : 'var(--s2)',
+      border:`1px solid ${highlight ? 'var(--grn)' : 'var(--line)'}`,
       borderRadius:14, padding:'12px 14px', marginBottom:10 }}>
       <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
         <span style={{ fontSize:22 }}>{goal.emoji}</span>
         <div>
           <div style={{ fontSize:13, fontWeight:700, color:'var(--text)' }}>{goal.name}</div>
-          <div style={{ fontSize:10, color:'var(--muted)' }}>
+          <div style={{ fontSize:10, color:'var(--sub)' }}>
             {fmt(goal.current)} de {fmt(goal.target)} ({Math.round(goal.current/goal.target*100)}%)
           </div>
         </div>
       </div>
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
         <div style={{ textAlign:'center', padding:'8px', background:'var(--s3)', borderRadius:10 }}>
-          <div style={{ fontSize:9, color:'var(--muted)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em' }}>Ritmo atual</div>
-          <div style={{ fontFamily:'Fraunces,serif', fontSize:18, fontWeight:700, color:'var(--muted)', marginTop:2 }}>
+          <div style={{ fontSize:9, color:'var(--sub)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em' }}>Ritmo atual</div>
+          <div style={{ fontFamily:'Instrument Serif,serif', fontSize:18, fontWeight:700, color:'var(--sub)', marginTop:2 }}>
             {mesesBase ? `${mesesBase}m` : '∞'}
           </div>
         </div>
         <div style={{ textAlign:'center', padding:'8px', background: ganho ? 'rgba(74,222,128,.15)' : 'var(--s3)', borderRadius:10 }}>
-          <div style={{ fontSize:9, color: ganho ? 'var(--green)' : 'var(--muted)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em' }}>Novo ritmo</div>
-          <div style={{ fontFamily:'Fraunces,serif', fontSize:18, fontWeight:700, color: ganho ? 'var(--green)' : 'var(--muted)', marginTop:2 }}>
+          <div style={{ fontSize:9, color: ganho ? 'var(--grn)' : 'var(--sub)', fontWeight:700, textTransform:'uppercase', letterSpacing:'.06em' }}>Novo ritmo</div>
+          <div style={{ fontFamily:'Instrument Serif,serif', fontSize:18, fontWeight:700, color: ganho ? 'var(--grn)' : 'var(--sub)', marginTop:2 }}>
             {mesesNovo ? `${mesesNovo}m` : '∞'}
           </div>
         </div>
       </div>
       {ganho > 0 && (
         <div style={{ marginTop:8, padding:'7px 10px', background:'rgba(74,222,128,.1)',
-          borderRadius:9, fontSize:12, fontWeight:700, color:'var(--green)', textAlign:'center' }}>
+          borderRadius:9, fontSize:12, fontWeight:700, color:'var(--grn)', textAlign:'center' }}>
           🚀 Antecipa em <strong>{ganho} {ganho === 1 ? 'mês' : 'meses'}!</strong>
         </div>
       )}
@@ -88,9 +88,9 @@ function TabHabito({ goals, totals }) {
           {opcoes.map(o => (
             <button key={o} onClick={() => setCat(o)}
               style={{ padding:'5px 11px', borderRadius:20, fontSize:11, fontWeight:700, cursor:'pointer',
-                border:`1px solid ${categoria===o?'var(--amber)':'var(--border)'}`,
-                background:categoria===o?'var(--amber-d)':'var(--s2)',
-                color:categoria===o?'var(--amber)':'var(--muted)' }}>
+                border:`1px solid ${categoria===o?'var(--gold)':'var(--line)'}`,
+                background:categoria===o?'var(--gold-a)':'var(--s2)',
+                color:categoria===o?'var(--gold)':'var(--sub)' }}>
               {o}
             </button>
           ))}
@@ -100,24 +100,24 @@ function TabHabito({ goals, totals }) {
         <div style={{ padding:'4px 0 2px' }}>
           <input type="range" min="50" max="800" step="50" value={corte}
             onChange={e => setCorte(+e.target.value)}
-            style={{ width:'100%', accentColor:'var(--amber)' }}/>
+            style={{ width:'100%', accentColor:'var(--gold)' }}/>
         </div>
-        <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--muted)', marginBottom:12 }}>
+        <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'var(--sub)', marginBottom:12 }}>
           <span>R$50</span>
-          <span style={{ fontSize:16, fontWeight:800, color:'var(--amber)' }}>− {fmt(corte)}/mês</span>
+          <span style={{ fontSize:16, fontWeight:800, color:'var(--gold)' }}>− {fmt(corte)}/mês</span>
           <span>R$800</span>
         </div>
       </div>
 
       {/* Impacto anual */}
-      <div style={{ background:'var(--s2)', border:'1px solid var(--border)', borderRadius:14, padding:'12px 14px', marginBottom:12 }}>
-        <div style={{ fontSize:10, fontWeight:700, color:'var(--muted)', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:8 }}>💥 Impacto real</div>
-        <MiniBar pct={100} color="var(--coral)"   label="Saída atual"    value={`−${fmt(corte)}/mês`}/>
-        <MiniBar pct={85}  color="var(--amber)"   label="Economia real"  value={`+${fmt(saving)}/mês`}/>
-        <MiniBar pct={70}  color="var(--green)"   label="Em 12 meses"    value={fmt(saving * 12)}/>
+      <div style={{ background:'var(--s2)', border:'1px solid var(--line)', borderRadius:14, padding:'12px 14px', marginBottom:12 }}>
+        <div style={{ fontSize:10, fontWeight:700, color:'var(--sub)', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:8 }}>💥 Impacto real</div>
+        <MiniBar pct={100} color="var(--red)"   label="Saída atual"    value={`−${fmt(corte)}/mês`}/>
+        <MiniBar pct={85}  color="var(--gold)"   label="Economia real"  value={`+${fmt(saving)}/mês`}/>
+        <MiniBar pct={70}  color="var(--grn)"   label="Em 12 meses"    value={fmt(saving * 12)}/>
         {totals.ent > 0 && (
-          <div style={{ fontSize:11, color:'var(--muted)', marginTop:8, borderTop:'1px solid var(--border)', paddingTop:8 }}>
-            Representa <strong style={{ color:'var(--amber)' }}>{Math.round(corte/totals.ent*100)}%</strong> da sua renda mensal
+          <div style={{ fontSize:11, color:'var(--sub)', marginTop:8, borderTop:'1px solid var(--line)', paddingTop:8 }}>
+            Representa <strong style={{ color:'var(--gold)' }}>{Math.round(corte/totals.ent*100)}%</strong> da sua renda mensal
           </div>
         )}
       </div>
@@ -129,9 +129,9 @@ function TabHabito({ goals, totals }) {
             {goals.filter(g=>!g.isParcela).map((g, i) => (
               <button key={g.id} onClick={() => setGoalIdx(i)}
                 style={{ padding:'4px 10px', borderRadius:20, fontSize:11, fontWeight:700, cursor:'pointer',
-                  border:`1px solid ${goalIdx===i?'var(--amber)':'var(--border)'}`,
-                  background:goalIdx===i?'var(--amber-d)':'var(--s2)',
-                  color:goalIdx===i?'var(--amber)':'var(--muted)' }}>
+                  border:`1px solid ${goalIdx===i?'var(--gold)':'var(--line)'}`,
+                  background:goalIdx===i?'var(--gold-a)':'var(--s2)',
+                  color:goalIdx===i?'var(--gold)':'var(--sub)' }}>
                 {g.emoji} {g.name}
               </button>
             ))}
@@ -173,9 +173,9 @@ function TabInvest() {
         {TAXAS.map(t => (
           <button key={t.n} onClick={() => setTaxa(t.v)}
             style={{ padding:'5px 10px', borderRadius:20, fontSize:10.5, fontWeight:700, cursor:'pointer',
-              border:`1px solid ${taxa===t.v?'var(--green)':'var(--border)'}`,
-              background:taxa===t.v?'var(--green-d)':'var(--s2)',
-              color:taxa===t.v?'var(--green)':'var(--muted)' }}>
+              border:`1px solid ${taxa===t.v?'var(--grn)':'var(--line)'}`,
+              background:taxa===t.v?'var(--grn-a)':'var(--s2)',
+              color:taxa===t.v?'var(--grn)':'var(--sub)' }}>
             {t.n}
           </button>
         ))}
@@ -194,31 +194,31 @@ function TabInvest() {
         </div>
       </div>
 
-      <label className="fl-lbl">Período: <strong style={{color:'var(--amber)'}}>{anos} anos</strong></label>
+      <label className="fl-lbl">Período: <strong style={{color:'var(--gold)'}}>{anos} anos</strong></label>
       <input type="range" min="1" max="30" step="1" value={anos}
         onChange={e => setAnos(+e.target.value)}
-        style={{ width:'100%', accentColor:'var(--amber)', marginBottom:12 }}/>
+        style={{ width:'100%', accentColor:'var(--gold)', marginBottom:12 }}/>
 
-      <div style={{ background:'linear-gradient(135deg,var(--green-d),rgba(74,222,128,.03))',
-        border:'1px solid var(--green)', borderRadius:14, padding:'14px 16px', marginBottom:12 }}>
+      <div style={{ background:'linear-gradient(135deg,var(--grn-a),rgba(74,222,128,.03))',
+        border:'1px solid var(--grn)', borderRadius:14, padding:'14px 16px', marginBottom:12 }}>
         <div style={{ fontSize:10, fontWeight:700, color:'rgba(74,222,128,.5)', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:6 }}>
           📈 Resultado em {anos} anos
         </div>
-        <div style={{ fontFamily:'Fraunces,serif', fontSize:32, fontWeight:700, color:'var(--green)', letterSpacing:-1, marginBottom:4 }}>
+        <div style={{ fontFamily:'Instrument Serif,serif', fontSize:32, fontWeight:700, color:'var(--grn)', letterSpacing:-1, marginBottom:4 }}>
           {fmt(result.fv)}
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginTop:8 }}>
           <div style={{ background:'rgba(0,0,0,.2)', borderRadius:9, padding:'8px 10px' }}>
-            <div style={{ fontSize:9, color:'var(--muted)', fontWeight:700, textTransform:'uppercase' }}>Você investiu</div>
-            <div style={{ fontFamily:'Fraunces,serif', fontSize:16, fontWeight:700, color:'var(--muted)', marginTop:2 }}>{fmt(result.investido)}</div>
+            <div style={{ fontSize:9, color:'var(--sub)', fontWeight:700, textTransform:'uppercase' }}>Você investiu</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:16, fontWeight:700, color:'var(--sub)', marginTop:2 }}>{fmt(result.investido)}</div>
           </div>
           <div style={{ background:'rgba(74,222,128,.1)', borderRadius:9, padding:'8px 10px' }}>
-            <div style={{ fontSize:9, color:'var(--green)', fontWeight:700, textTransform:'uppercase' }}>Juros ganhos</div>
-            <div style={{ fontFamily:'Fraunces,serif', fontSize:16, fontWeight:700, color:'var(--green)', marginTop:2 }}>{fmt(result.juros)}</div>
+            <div style={{ fontSize:9, color:'var(--grn)', fontWeight:700, textTransform:'uppercase' }}>Juros ganhos</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:16, fontWeight:700, color:'var(--grn)', marginTop:2 }}>{fmt(result.juros)}</div>
           </div>
         </div>
-        <div style={{ fontSize:11, color:'var(--muted)', marginTop:10, textAlign:'center' }}>
-          Os juros representam <strong style={{color:'var(--green)'}}>{Math.round(result.juros/result.investido*100)}%</strong> a mais do que você investiu 🎉
+        <div style={{ fontSize:11, color:'var(--sub)', marginTop:10, textAlign:'center' }}>
+          Os juros representam <strong style={{color:'var(--grn)'}}>{Math.round(result.juros/result.investido*100)}%</strong> a mais do que você investiu 🎉
         </div>
       </div>
     </div>
@@ -243,9 +243,9 @@ function TabParcela() {
 
   return (
     <div>
-      <div style={{ background:'var(--s2)', border:'1px solid var(--border)', borderRadius:14, padding:'12px 14px', marginBottom:12 }}>
-        <div style={{ fontSize:10.5, color:'var(--muted)', fontWeight:700, marginBottom:10 }}>
-          ⚠️ Este simulador mostra o <strong style={{color:'var(--coral)'}}>custo real</strong> de uma compra parcelada com juros.
+      <div style={{ background:'var(--s2)', border:'1px solid var(--line)', borderRadius:14, padding:'12px 14px', marginBottom:12 }}>
+        <div style={{ fontSize:10.5, color:'var(--sub)', fontWeight:700, marginBottom:10 }}>
+          ⚠️ Este simulador mostra o <strong style={{color:'var(--red)'}}>custo real</strong> de uma compra parcelada com juros.
         </div>
       </div>
 
@@ -262,42 +262,42 @@ function TabParcela() {
         </div>
       </div>
 
-      <label className="fl-lbl">Juros ao mês: <strong style={{color:'var(--coral)'}}>{juros}%</strong></label>
+      <label className="fl-lbl">Juros ao mês: <strong style={{color:'var(--red)'}}>{juros}%</strong></label>
       <div style={{ display:'flex', gap:6, flexWrap:'wrap', marginBottom:8 }}>
         {[0, 1.5, 2.5, 3.5, 5, 7].map(j => (
           <button key={j} onClick={() => setJuros(j)}
             style={{ padding:'4px 10px', borderRadius:20, fontSize:11, fontWeight:700, cursor:'pointer',
-              border:`1px solid ${juros===j?'var(--coral)':'var(--border)'}`,
-              background:juros===j?'var(--coral-d)':'var(--s2)',
-              color:juros===j?'var(--coral)':'var(--muted)' }}>
+              border:`1px solid ${juros===j?'var(--red)':'var(--line)'}`,
+              background:juros===j?'var(--red-a)':'var(--s2)',
+              color:juros===j?'var(--red)':'var(--sub)' }}>
             {j === 0 ? 'Sem juros' : `${j}%/mês`}
           </button>
         ))}
       </div>
 
-      <div style={{ background: totalJuros > 0 ? 'var(--coral-d)' : 'var(--green-d)',
-        border:`1px solid ${totalJuros>0?'var(--coral)':'var(--green)'}`,
+      <div style={{ background: totalJuros > 0 ? 'var(--red-a)' : 'var(--grn-a)',
+        border:`1px solid ${totalJuros>0?'var(--red)':'var(--grn)'}`,
         borderRadius:14, padding:'14px 16px' }}>
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:10 }}>
           <div style={{ background:'rgba(0,0,0,.2)', borderRadius:9, padding:'8px 10px', textAlign:'center' }}>
-            <div style={{ fontSize:9, color:'var(--muted)', fontWeight:700, textTransform:'uppercase' }}>Parcela</div>
-            <div style={{ fontFamily:'Fraunces,serif', fontSize:18, fontWeight:700, color:'var(--coral)', marginTop:2 }}>
+            <div style={{ fontSize:9, color:'var(--sub)', fontWeight:700, textTransform:'uppercase' }}>Parcela</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:18, fontWeight:700, color:'var(--red)', marginTop:2 }}>
               {fmt(valorParcela)}/mês
             </div>
           </div>
           <div style={{ background:'rgba(0,0,0,.2)', borderRadius:9, padding:'8px 10px', textAlign:'center' }}>
-            <div style={{ fontSize:9, color:'var(--muted)', fontWeight:700, textTransform:'uppercase' }}>Você paga</div>
-            <div style={{ fontFamily:'Fraunces,serif', fontSize:18, fontWeight:700, color:totalJuros>0?'var(--coral)':'var(--green)', marginTop:2 }}>
+            <div style={{ fontSize:9, color:'var(--sub)', fontWeight:700, textTransform:'uppercase' }}>Você paga</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:18, fontWeight:700, color:totalJuros>0?'var(--red)':'var(--grn)', marginTop:2 }}>
               {fmt(totalComJuros)}
             </div>
           </div>
         </div>
         {totalJuros > 0 ? (
-          <div style={{ fontSize:12, fontWeight:700, color:'var(--coral)', textAlign:'center' }}>
+          <div style={{ fontSize:12, fontWeight:700, color:'var(--red)', textAlign:'center' }}>
             Você paga <strong>{fmt(totalJuros)} a mais</strong> em juros ({perdaAnual.toFixed(0)}% do valor original!)
           </div>
         ) : (
-          <div style={{ fontSize:12, fontWeight:700, color:'var(--green)', textAlign:'center' }}>
+          <div style={{ fontSize:12, fontWeight:700, color:'var(--grn)', textAlign:'center' }}>
             ✅ Sem juros — OK parcelar neste caso!
           </div>
         )}
@@ -323,20 +323,20 @@ function TabRenda({ goals, totals }) {
 
   return (
     <div>
-      <label className="fl-lbl">Se vocês ganhassem <strong style={{color:'var(--green)'}}>{fmt(extra)}</strong> extra...</label>
+      <label className="fl-lbl">Se vocês ganhassem <strong style={{color:'var(--grn)'}}>{fmt(extra)}</strong> extra...</label>
       <input type="range" min="200" max="5000" step="100" value={extra}
         onChange={e => setExtra(+e.target.value)}
-        style={{ width:'100%', accentColor:'var(--green)', marginBottom:12 }}/>
+        style={{ width:'100%', accentColor:'var(--grn)', marginBottom:12 }}/>
 
       <label className="fl-lbl">Onde aplicar?</label>
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:14 }}>
         {DESTINOS.map(d => (
           <div key={d.id} onClick={() => setDestino(d.id)}
             style={{ padding:'10px 12px', borderRadius:13, cursor:'pointer',
-              border:`1.5px solid ${destino===d.id?'var(--green)':'var(--border)'}`,
-              background:destino===d.id?'var(--green-d)':'var(--s2)' }}>
-            <div style={{ fontSize:13, fontWeight:700, color:destino===d.id?'var(--green)':'var(--text)', marginBottom:2 }}>{d.label}</div>
-            <div style={{ fontSize:10, color:'var(--muted)' }}>{d.desc}</div>
+              border:`1.5px solid ${destino===d.id?'var(--grn)':'var(--line)'}`,
+              background:destino===d.id?'var(--grn-a)':'var(--s2)' }}>
+            <div style={{ fontSize:13, fontWeight:700, color:destino===d.id?'var(--grn)':'var(--text)', marginBottom:2 }}>{d.label}</div>
+            <div style={{ fontSize:10, color:'var(--sub)' }}>{d.desc}</div>
           </div>
         ))}
       </div>
@@ -348,9 +348,9 @@ function TabRenda({ goals, totals }) {
             {goals.filter(g=>!g.isParcela).map((g, i) => (
               <button key={g.id} onClick={() => setGoalIdx(i)}
                 style={{ padding:'4px 10px', borderRadius:20, fontSize:11, fontWeight:700, cursor:'pointer',
-                  border:`1px solid ${goalIdx===i?'var(--green)':'var(--border)'}`,
-                  background:goalIdx===i?'var(--green-d)':'var(--s2)',
-                  color:goalIdx===i?'var(--green)':'var(--muted)' }}>
+                  border:`1px solid ${goalIdx===i?'var(--grn)':'var(--line)'}`,
+                  background:goalIdx===i?'var(--grn-a)':'var(--s2)',
+                  color:goalIdx===i?'var(--grn)':'var(--sub)' }}>
                 {g.emoji} {g.name}
               </button>
             ))}
@@ -360,36 +360,36 @@ function TabRenda({ goals, totals }) {
       )}
 
       {destino === 'invest' && (
-        <div style={{ background:'var(--green-d)', border:'1px solid var(--green)', borderRadius:14, padding:'14px' }}>
+        <div style={{ background:'var(--grn-a)', border:'1px solid var(--grn)', borderRadius:14, padding:'14px' }}>
           <div style={{ fontSize:10, fontWeight:700, color:'rgba(74,222,128,.5)', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:6 }}>Em 10 anos (CDB 10%aa)</div>
-          <div style={{ fontFamily:'Fraunces,serif', fontSize:28, fontWeight:700, color:'var(--green)', letterSpacing:-1 }}>
+          <div style={{ fontFamily:'Instrument Serif,serif', fontSize:28, fontWeight:700, color:'var(--grn)', letterSpacing:-1 }}>
             {fmt(extra * ((Math.pow(1.008,120)-1)/0.008))}
           </div>
-          <div style={{ fontSize:11, color:'var(--muted)', marginTop:4 }}>
+          <div style={{ fontSize:11, color:'var(--sub)', marginTop:4 }}>
             Investindo {fmt(extra)}/mês durante 10 anos com juros compostos
           </div>
         </div>
       )}
 
       {destino === 'reserva' && (
-        <div style={{ background:'var(--blue-d)', border:'1px solid rgba(96,165,250,.5)', borderRadius:14, padding:'14px' }}>
+        <div style={{ background:'var(--blu-a)', border:'1px solid rgba(96,165,250,.5)', borderRadius:14, padding:'14px' }}>
           <div style={{ fontSize:10, fontWeight:700, color:'rgba(96,165,250,.5)', textTransform:'uppercase', letterSpacing:'.08em', marginBottom:6 }}>Reserva de emergência</div>
-          <div style={{ fontFamily:'Fraunces,serif', fontSize:28, fontWeight:700, color:'var(--blue)', letterSpacing:-1 }}>
+          <div style={{ fontFamily:'Instrument Serif,serif', fontSize:28, fontWeight:700, color:'var(--blu)', letterSpacing:-1 }}>
             {Math.ceil(extra > 0 ? (totals.sai * 6) / extra : 0)} meses
           </div>
-          <div style={{ fontSize:11, color:'var(--muted)', marginTop:4 }}>
+          <div style={{ fontSize:11, color:'var(--sub)', marginTop:4 }}>
             Para atingir 6 meses de despesas ({fmt(totals.sai * 6)})
           </div>
         </div>
       )}
 
       {destino === 'dividas' && (
-        <div style={{ background:'var(--amber-d)', border:'1px solid var(--amber)', borderRadius:14, padding:'14px' }}>
-          <div style={{ fontSize:11, color:'var(--amber)', fontWeight:700, marginBottom:8 }}>
+        <div style={{ background:'var(--gold-a)', border:'1px solid var(--gold)', borderRadius:14, padding:'14px' }}>
+          <div style={{ fontSize:11, color:'var(--gold)', fontWeight:700, marginBottom:8 }}>
             💡 Quitar dívidas = rendimento garantido da taxa que você pagava.
           </div>
-          <div style={{ fontSize:11, color:'var(--muted)', lineHeight:1.6 }}>
-            Dívida de cartão com 3%/mês: quitar é como ter <strong style={{color:'var(--amber)'}}>36% de rendimento ao ano</strong> garantido — melhor que qualquer investimento.
+          <div style={{ fontSize:11, color:'var(--sub)', lineHeight:1.6 }}>
+            Dívida de cartão com 3%/mês: quitar é como ter <strong style={{color:'var(--gold)'}}>36% de rendimento ao ano</strong> garantido — melhor que qualquer investimento.
           </div>
         </div>
       )}
@@ -414,9 +414,9 @@ export default function SimModal({ onClose }) {
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
               style={{ flexShrink:0, padding:'7px 13px', borderRadius:20, fontSize:12, fontWeight:700, cursor:'pointer',
-                border:`1.5px solid ${tab===t.id?'var(--amber)':'var(--border)'}`,
-                background:tab===t.id?'var(--amber-d)':'var(--s2)',
-                color:tab===t.id?'var(--amber)':'var(--muted)' }}>
+                border:`1.5px solid ${tab===t.id?'var(--gold)':'var(--line)'}`,
+                background:tab===t.id?'var(--gold-a)':'var(--s2)',
+                color:tab===t.id?'var(--gold)':'var(--sub)' }}>
               {t.icon} {t.label}
             </button>
           ))}

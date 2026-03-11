@@ -18,13 +18,13 @@ export default function CelebModal({ notif, onClose, onSend }) {
         <div className="sh-hd"/>
         <div style={{textAlign:'center',padding:'0 4px 14px'}}>
           <div style={{fontSize:52,marginBottom:8}}>{notif.goalEmoji}</div>
-          <div style={{fontFamily:'Fraunces,serif',fontSize:22,fontWeight:700,color:'var(--amber)',marginBottom:4}}>
+          <div style={{fontFamily:'Instrument Serif,serif',fontSize:22,fontWeight:700,color:'var(--gold)',marginBottom:4}}>
             {notif.milestone}% concluído!
           </div>
           <div style={{fontSize:13,color:'var(--text)',marginBottom:4}}>
             {notif.goalName}
           </div>
-          <div style={{fontSize:11.5,color:'var(--muted)',lineHeight:1.5}}>
+          <div style={{fontSize:11.5,color:'var(--sub)',lineHeight:1.5}}>
             {notif.from} atingiu um marco importante.<br/>
             Envie uma reação para {receiver}!
           </div>
@@ -37,8 +37,8 @@ export default function CelebModal({ notif, onClose, onSend }) {
               style={{
                 height:46, borderRadius:13, display:'flex', alignItems:'center', justifyContent:'center',
                 fontSize:24, cursor:'pointer', transition:'.18s',
-                border:`2px solid ${picked===r?'var(--amber)':'var(--border)'}`,
-                background:picked===r?'var(--amber-d)':'var(--s2)',
+                border:`2px solid ${picked===r?'var(--gold)':'var(--line)'}`,
+                background:picked===r?'var(--gold-a)':'var(--s2)',
               }}>
               {r}
             </div>

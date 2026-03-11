@@ -66,7 +66,7 @@ export default function TxModal({ tx, gfs, defaultType, preGfId, onClose, onSave
             placeholder={type==='in' ? 'Ex: Salário março' : 'Ex: Supermercado'}
             value={name} onChange={e => setName(e.target.value)}/>
           {autoDetected && (
-            <div style={{fontSize:10,color:'var(--amber)',marginTop:4}}>✨ Categoria detectada automaticamente</div>
+            <div style={{fontSize:10,color:'var(--gold)',marginTop:4}}>✨ Categoria detectada automaticamente</div>
           )}
         </div>
 
@@ -103,7 +103,7 @@ export default function TxModal({ tx, gfs, defaultType, preGfId, onClose, onSave
                   <div className="gf-pick-ico">{g.icon}</div>
                   <div style={{flex:1,minWidth:0}}>
                     <div className="gf-pick-name">{g.name}</div>
-                    <div style={{fontSize:9,color:'var(--muted)',fontWeight:700}}>Limite: {fmt(g.limit)}</div>
+                    <div style={{fontSize:9,color:'var(--sub)',fontWeight:700}}>Limite: {fmt(g.limit)}</div>
                   </div>
                 </div>
               ))}

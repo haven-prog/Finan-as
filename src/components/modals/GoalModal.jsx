@@ -100,15 +100,15 @@ export default function GoalModal({ goal, onClose, onSave }) {
               </div>
             </div>
             {totalCalc > 0 && (
-              <div style={{ background:'var(--blue-d)', border:'1px solid rgba(96,165,250,.3)',
+              <div style={{ background:'var(--blu-a)', border:'1px solid rgba(96,165,250,.3)',
                 borderRadius:11, padding:'10px 14px', marginBottom:13 }}>
                 <div style={{ fontSize:10, fontWeight:700, color:'rgba(96,165,250,.6)',
                   textTransform:'uppercase', letterSpacing:'.08em', marginBottom:4 }}>Total do financiamento</div>
-                <div style={{ fontFamily:'Fraunces,serif', fontSize:22, fontWeight:700,
-                  color:'var(--blue)', letterSpacing:-1 }}>
+                <div style={{ fontFamily:'Instrument Serif,serif', fontSize:22, fontWeight:700,
+                  color:'var(--blu)', letterSpacing:-1 }}>
                   R${new Intl.NumberFormat('pt-BR').format(totalCalc)}
                 </div>
-                <div style={{ fontSize:10.5, color:'var(--muted)', marginTop:4 }}>
+                <div style={{ fontSize:10.5, color:'var(--sub)', marginTop:4 }}>
                   💡 Vincule ao Gasto Fixo correspondente para rastreio automático por parcela.
                 </div>
               </div>

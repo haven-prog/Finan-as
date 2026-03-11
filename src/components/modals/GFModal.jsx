@@ -54,9 +54,9 @@ export default function GFModal({ gf, goals, onClose, onSave }) {
         <div style={{display:'flex',gap:7,marginBottom:13,flexWrap:'wrap'}}>
           {[100,200,350,500,1000,1200].map(v => (
             <button key={v} onClick={() => setLimit(String(v))}
-              style={{padding:'4px 10px',borderRadius:20,border:'1px solid var(--border)',cursor:'pointer',
-                background:parseInt(limit)===v?'var(--amber-d)':'var(--s2)',
-                color:parseInt(limit)===v?'var(--amber)':'var(--muted)', fontSize:11,fontWeight:700}}>
+              style={{padding:'4px 10px',borderRadius:20,border:'1px solid var(--line)',cursor:'pointer',
+                background:parseInt(limit)===v?'var(--gold-a)':'var(--s2)',
+                color:parseInt(limit)===v?'var(--gold)':'var(--sub)', fontSize:11,fontWeight:700}}>
               {fmt(v)}
             </button>
           ))}
@@ -67,12 +67,12 @@ export default function GFModal({ gf, goals, onClose, onSave }) {
           {['Gabriel','Gabi','Ambos'].map(o => (
             <div key={o}
               className={`own-b ${owner===o?(o==='Gabi'?'sa':'sg'):''}`}
-              style={owner===o&&o==='Ambos'?{borderColor:'var(--amber)',background:'var(--amber-d)'}:{}}
+              style={owner===o&&o==='Ambos'?{borderColor:'var(--gold)',background:'var(--gold-a)'}:{}}
               onClick={() => setOwner(o)}>
               {o==='Gabriel' && <div className="av av-g" style={{width:22,height:22,fontSize:9,flexShrink:0}}>G</div>}
               {o==='Gabi'    && <div className="av av-a" style={{width:22,height:22,fontSize:9,flexShrink:0}}>G</div>}
               {o==='Ambos'   && <span style={{fontSize:14}}>👫</span>}
-              <div className="own-n" style={owner===o?{color:'var(--amber)'}:{}}>{o}</div>
+              <div className="own-n" style={owner===o?{color:'var(--gold)'}:{}}>{o}</div>
             </div>
           ))}
         </div>
@@ -93,17 +93,17 @@ export default function GFModal({ gf, goals, onClose, onSave }) {
                 <div key={g.id}
                   onClick={() => setGoalId(goalId===g.id ? null : g.id)}
                   style={{display:'flex',alignItems:'center',gap:10,padding:'10px 13px',borderRadius:12,marginBottom:7,cursor:'pointer',
-                    border:`1.5px solid ${goalId===g.id?'var(--amber)':'var(--border)'}`,
-                    background:goalId===g.id?'var(--amber-d)':'var(--s2)'}}>
+                    border:`1.5px solid ${goalId===g.id?'var(--gold)':'var(--line)'}`,
+                    background:goalId===g.id?'var(--gold-a)':'var(--s2)'}}>
                   <span style={{fontSize:20}}>{g.emoji}</span>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:12.5,fontWeight:700,color:goalId===g.id?'var(--amber)':'var(--text)'}}>{g.name}</div>
-                    {g.isParcela && <div style={{fontSize:9.5,color:'var(--muted)'}}>🏦 Parcela {g.parcelasPagas}/{g.parcelasTotal}</div>}
+                    <div style={{fontSize:12.5,fontWeight:700,color:goalId===g.id?'var(--gold)':'var(--text)'}}>{g.name}</div>
+                    {g.isParcela && <div style={{fontSize:9.5,color:'var(--sub)'}}>🏦 Parcela {g.parcelasPagas}/{g.parcelasTotal}</div>}
                   </div>
-                  {goalId===g.id && <span style={{color:'var(--amber)',fontWeight:800}}>✓</span>}
+                  {goalId===g.id && <span style={{color:'var(--gold)',fontWeight:800}}>✓</span>}
                 </div>
               ))}
-              {goalId && <div style={{fontSize:10.5,color:'var(--green)',fontWeight:700,padding:'4px 0'}}>
+              {goalId && <div style={{fontSize:10.5,color:'var(--grn)',fontWeight:700,padding:'4px 0'}}>
                 🔗 Pagamentos registrarão progresso em {linkedGoal?.emoji} {linkedGoal?.name}
               </div>}
             </div>

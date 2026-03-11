@@ -19,7 +19,7 @@ export default function ContribModal({ goal, saldo, onClose, onSave }) {
       <div className="sheet">
         <div className="sh-hd"/>
         <div className="sh-t">Adicionar Aporte</div>
-        <div className="sh-s">em <strong style={{color:'var(--amber)'}}>{goal.emoji} {goal.name}</strong></div>
+        <div className="sh-s">em <strong style={{color:'var(--gold)'}}>{goal.emoji} {goal.name}</strong></div>
 
         <div className="amtw">
           <div className="cur">R$</div>
@@ -29,13 +29,13 @@ export default function ContribModal({ goal, saldo, onClose, onSave }) {
 
         {v > 0 && (
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12}}>
-            <div style={{background:'var(--s2)',border:'1px solid var(--border)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
-              <div style={{fontSize:9.5,fontWeight:700,color:'var(--muted)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>Saldo atual</div>
-              <div style={{fontFamily:'Fraunces,serif',fontSize:16,fontWeight:700,color:'var(--text)'}}>{fmt(saldo)}</div>
+            <div style={{background:'var(--s2)',border:'1px solid var(--line)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+              <div style={{fontSize:9.5,fontWeight:700,color:'var(--sub)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>Saldo atual</div>
+              <div style={{fontFamily:'Instrument Serif,serif',fontSize:16,fontWeight:700,color:'var(--text)'}}>{fmt(saldo)}</div>
             </div>
-            <div style={{background:'var(--coral-d)',border:'1px solid var(--coral)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
-              <div style={{fontSize:9.5,fontWeight:700,color:'var(--coral)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>Saldo após</div>
-              <div style={{fontFamily:'Fraunces,serif',fontSize:16,fontWeight:700,color:saldoPos<0?'var(--coral)':'var(--text)'}}>{fmt(saldoPos)}</div>
+            <div style={{background:'var(--red-a)',border:'1px solid var(--red)',borderRadius:12,padding:'10px 12px',textAlign:'center'}}>
+              <div style={{fontSize:9.5,fontWeight:700,color:'var(--red)',textTransform:'uppercase',letterSpacing:'.07em',marginBottom:4}}>Saldo após</div>
+              <div style={{fontFamily:'Instrument Serif,serif',fontSize:16,fontWeight:700,color:saldoPos<0?'var(--red)':'var(--text)'}}>{fmt(saldoPos)}</div>
             </div>
           </div>
         )}

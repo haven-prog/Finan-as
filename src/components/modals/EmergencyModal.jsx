@@ -26,7 +26,7 @@ export default function EmergencyModal({ onClose, onSave }) {
         <div className="sh-s">🛡 Edite o valor atual e a meta alvo.</div>
 
         <div style={{background:'linear-gradient(135deg,#0b1810,#091510)',border:'1px solid #1a3322',borderRadius:16,padding:14,marginBottom:16,textAlign:'center'}}>
-          <div style={{fontFamily:'Fraunces,serif',fontSize:30,fontWeight:700,color:'var(--text)',letterSpacing:-1,marginBottom:4}}>{fmt(parseInt(current)||0)}</div>
+          <div style={{fontFamily:'Instrument Serif,serif',fontSize:30,fontWeight:700,color:'var(--text)',letterSpacing:-1,marginBottom:4}}>{fmt(parseInt(current)||0)}</div>
           <div style={{fontSize:10,color:'rgba(74,222,128,.5)',marginBottom:10}}>de {fmt(parseInt(target)||0)} · {pct}%</div>
           <div style={{height:8,background:'#0f2218',borderRadius:100,overflow:'hidden'}}>
             <div style={{height:'100%',width:pct+'%',borderRadius:100,background:'linear-gradient(90deg,#22c55e,#4ade80)',transition:'width .5s'}}/>
@@ -58,9 +58,9 @@ export default function EmergencyModal({ onClose, onSave }) {
         <div style={{display:'flex',gap:8,marginBottom:16,flexWrap:'wrap'}}>
           {[10000,15000,20000,30000,50000].map(v => (
             <button key={v} onClick={() => setTarget(String(v))}
-              style={{padding:'5px 11px',borderRadius:20,border:'1px solid var(--border)',cursor:'pointer',
-                background:parseInt(target)===v?'var(--green-d)':'var(--s2)',
-                color:parseInt(target)===v?'var(--green)':'var(--muted)',fontSize:11,fontWeight:700}}>
+              style={{padding:'5px 11px',borderRadius:20,border:'1px solid var(--line)',cursor:'pointer',
+                background:parseInt(target)===v?'var(--grn-a)':'var(--s2)',
+                color:parseInt(target)===v?'var(--grn)':'var(--sub)',fontSize:11,fontWeight:700}}>
               {fmt(v)}
             </button>
           ))}

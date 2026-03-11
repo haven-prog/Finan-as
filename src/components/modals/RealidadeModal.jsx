@@ -20,9 +20,9 @@ export default function RealidadeModal({ appSaldo, onClose, onReconcile }) {
         <div className="sh-t">⚖️ Modo Realidade</div>
         <div className="sh-s">Compare o app com seu banco e corrija divergências.</div>
 
-        <div style={{background:'var(--s2)',border:'1px solid var(--border)',borderRadius:14,padding:'14px 16px',marginBottom:16}}>
-          <div style={{fontSize:10,fontWeight:700,color:'var(--muted)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>App diz que seu saldo é</div>
-          <div style={{fontFamily:'Fraunces,serif',fontSize:32,fontWeight:700,letterSpacing:-1,color:appSaldo<0?'var(--coral)':'var(--amber)'}}>
+        <div style={{background:'var(--s2)',border:'1px solid var(--line)',borderRadius:14,padding:'14px 16px',marginBottom:16}}>
+          <div style={{fontSize:10,fontWeight:700,color:'var(--sub)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>App diz que seu saldo é</div>
+          <div style={{fontFamily:'Instrument Serif,serif',fontSize:32,fontWeight:700,letterSpacing:-1,color:appSaldo<0?'var(--red)':'var(--gold)'}}>
             {appSaldo<0?'−':''}{fmt(appSaldo)}
           </div>
         </div>
@@ -38,24 +38,24 @@ export default function RealidadeModal({ appSaldo, onClose, onReconcile }) {
 
         {diff !== null && (
           <div style={{
-            background: diff===0 ? 'var(--green-d)' : diff>0 ? 'var(--green-d)' : 'var(--coral-d)',
-            border: `1px solid ${diff===0?'var(--green)':diff>0?'var(--green)':'var(--coral)'}`,
+            background: diff===0 ? 'var(--grn-a)' : diff>0 ? 'var(--grn-a)' : 'var(--red-a)',
+            border: `1px solid ${diff===0?'var(--grn)':diff>0?'var(--grn)':'var(--red)'}`,
             borderRadius:14, padding:'14px 16px', marginBottom:16,
           }}>
             {diff === 0 ? (
               <div style={{textAlign:'center'}}>
                 <div style={{fontSize:28,marginBottom:6}}>✅</div>
-                <div style={{fontSize:13,fontWeight:700,color:'var(--green)'}}>Tudo certinho! App e banco batem.</div>
+                <div style={{fontSize:13,fontWeight:700,color:'var(--grn)'}}>Tudo certinho! App e banco batem.</div>
               </div>
             ) : (
               <>
-                <div style={{fontSize:10,fontWeight:700,color:diff>0?'var(--green)':'var(--coral)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>
+                <div style={{fontSize:10,fontWeight:700,color:diff>0?'var(--grn)':'var(--red)',textTransform:'uppercase',letterSpacing:'.08em',marginBottom:6}}>
                   {diff > 0 ? '↑ Banco tem mais' : '↓ Banco tem menos'} — Diferença
                 </div>
-                <div style={{fontFamily:'Fraunces,serif',fontSize:28,fontWeight:700,letterSpacing:-1,color:diff>0?'var(--green)':'var(--coral)'}}>
+                <div style={{fontFamily:'Instrument Serif,serif',fontSize:28,fontWeight:700,letterSpacing:-1,color:diff>0?'var(--grn)':'var(--red)'}}>
                   {diff>0?'+':'-'}{fmt(diffAbs)}
                 </div>
-                <div style={{fontSize:11,color:'var(--muted)',marginTop:6,lineHeight:1.5}}>
+                <div style={{fontSize:11,color:'var(--sub)',marginTop:6,lineHeight:1.5}}>
                   Isso pode ser um lançamento esquecido. Ajustar cria uma transação de conciliação.
                 </div>
               </>
