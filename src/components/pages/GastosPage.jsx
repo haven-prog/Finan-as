@@ -12,64 +12,85 @@ export default function GastosPage({ onOpenTx }) {
   const [delId,  setDelId]  = useState(null)
 
   const filtered = useMemo(() => {
-    if (filter==='Todos')    return txs
-    if (filter==='Entradas') return txs.filter(t => t.type==='in')
-    if (filter==='Saídas')   return txs.filter(t => t.type==='out')
-    return txs.filter(t => t.owner===filter)
+    if (filter === 'Todos')    return txs
+    if (filter === 'Entradas') return txs.filter(t => t.type === 'in')
+    if (filter === 'Saídas')   return txs.filter(t => t.type === 'out')
+    return txs.filter(t => t.owner === filter)
   }, [txs, filter])
 
-  const totEnt = filtered.filter(t=>t.type==='in').reduce((s,t)=>s+t.amount, 0)
-  const totSai = Math.abs(filtered.filter(t=>t.type==='out').reduce((s,t)=>s+t.amount, 0))
-
-  function deleteTx(id) { dispatch({ type:'DELETE_TX', id }) }
+  const totEnt = filtered.filter(t => t.type==='in').reduce((s,t) => s+t.amount, 0)
+  const totSai = Math.abs(filtered.filter(t => t.type==='out').reduce((s,t) => s+t.amount, 0))
 
   return (
     <div className="page">
+      {/* Header */}
       <div className="ph">
-        <div className="D" style={{fontSize:23,fontWeight:700,letterSpacing:-1,marginBottom:10}}>Gastos</div>
-        <div style={{display:'flex',gap:8,marginBottom:11}}>
-          <div style={{flex:1,background:'var(--green-d)',border:'1px solid var(--green)',borderRadius:12,padding:'8px 12px'}}>
-            <div style={{fontSize:9.5,fontWeight:700,color:'var(--green)',letterSpacing:'.07em',textTransform:'uppercase',marginBottom:2}}>Entradas</div>
-            <div style={{fontFamily:'Fraunces,serif',fontSize:16,fontWeight:700,color:'var(--green)'}}>{fmt(totEnt)}</div>
+        <div style={{ fontFamily:'Instrument Serif,serif', fontSize:28, letterSpacing:'-.5px', marginBottom:18 }}>
+          Lançamentos
+        </div>
+
+        {/* Totais */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:14 }}>
+          <div style={{
+            background:'var(--s1)', border:'1px solid rgba(72,201,122,.15)',
+            borderRadius:16, padding:'14px 16px',
+          }}>
+            <div style={{ fontSize:11, fontWeight:600, color:'var(--sub)', marginBottom:6 }}>Entradas</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:22, color:'var(--green)' }}>
+              {fmt(totEnt)}
+            </div>
           </div>
-          <div style={{flex:1,background:'var(--coral-d)',border:'1px solid var(--coral)',borderRadius:12,padding:'8px 12px'}}>
-            <div style={{fontSize:9.5,fontWeight:700,color:'var(--coral)',letterSpacing:'.07em',textTransform:'uppercase',marginBottom:2}}>Saídas</div>
-            <div style={{fontFamily:'Fraunces,serif',fontSize:16,fontWeight:700,color:'var(--coral)'}}>{fmt(totSai)}</div>
+          <div style={{
+            background:'var(--s1)', border:'1px solid rgba(240,96,96,.15)',
+            borderRadius:16, padding:'14px 16px',
+          }}>
+            <div style={{ fontSize:11, fontWeight:600, color:'var(--sub)', marginBottom:6 }}>Saídas</div>
+            <div style={{ fontFamily:'Instrument Serif,serif', fontSize:22, color:'var(--coral)' }}>
+              {fmt(totSai)}
+            </div>
           </div>
         </div>
-        <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
+
+        {/* Filtros */}
+        <div style={{ display:'flex', gap:6, overflowX:'auto' }}>
           {FILTERS.map(f => (
-            <button key={f} onClick={() => setFilter(f)}
-              style={{padding:'5px 11px',borderRadius:20,border:`1px solid ${filter===f?'var(--amber)':'var(--border)'}`,
-                background:filter===f?'var(--amber-d)':'var(--s2)',color:filter===f?'var(--amber)':'var(--muted)',
-                fontSize:11,fontWeight:700,cursor:'pointer'}}>
+            <button key={f} className={`chip${filter===f?' active':''}`} onClick={() => setFilter(f)}>
               {f}
             </button>
           ))}
         </div>
       </div>
 
-      <div style={{padding:'0 20px'}}>
-        <div style={{fontSize:11,color:'var(--muted)',marginBottom:10,textAlign:'center'}}>
-          ← Deslize para editar · → Deslize para excluir · Duplo toque para editar
-        </div>
-        {filtered.length === 0 && (
-          <div style={{textAlign:'center',padding:40,color:'var(--muted)',fontSize:13}}>
-            Nenhum lançamento encontrado.
+      {/* Lista */}
+      <div style={{ padding:'0 22px' }}>
+        <div className="swipe-hint">← excluir · → editar</div>
+
+        {filtered.length === 0 ? (
+          <div style={{ textAlign:'center', padding:'40px 0', color:'var(--sub)', fontSize:14 }}>
+            Nenhum lançamento aqui.
+          </div>
+        ) : (
+          <div className="tx-list">
+            {filtered.map(tx => (
+              <TxRow key={tx.id} tx={tx} gfs={gfs}
+                onDelete={id => setDelId(id)}
+                onEdit={tx => onOpenTx(tx.type, tx)}/>
+            ))}
           </div>
         )}
-        {filtered.map(tx => (
-          <TxRow key={tx.id} tx={tx} gfs={gfs}
-            onDelete={id => setDelId(id)}
-            onEdit={tx => onOpenTx(tx.type, tx)}/>
-        ))}
+
+        <button className="add-tx-btn" onClick={() => onOpenTx('out')}>
+          + Novo lançamento
+        </button>
       </div>
 
       {delId && (
-        <Confirm title="Excluir lançamento?"
+        <Confirm
+          title="Excluir lançamento?"
           msg="Esta ação não pode ser desfeita."
-          onYes={() => { deleteTx(delId); setDelId(null) }}
-          onNo={() => setDelId(null)}/>
+          onYes={() => { dispatch({ type:'DELETE_TX', id:delId }); setDelId(null) }}
+          onNo={() => setDelId(null)}
+        />
       )}
     </div>
   )

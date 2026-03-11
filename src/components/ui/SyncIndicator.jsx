@@ -1,38 +1,28 @@
-import { useFinance } from '../../context/FinanceContext.jsx'
-import { SYNC_STATUS } from '../../context/FinanceContext.jsx'
+import { useFinance, SYNC_STATUS } from '../../context/FinanceContext.jsx'
 
-const STATUS_CONFIG = {
-  [SYNC_STATUS.OFFLINE]:   { icon:'📴', color:'var(--muted)', label:'Offline' },
-  [SYNC_STATUS.SYNCING]:   { icon:'🔄', color:'var(--amber)', label:'Sincronizando...' },
-  [SYNC_STATUS.SYNCED]:    { icon:'✅', color:'var(--green)', label:'Sincronizado' },
-  [SYNC_STATUS.ERROR]:     { icon:'⚠️', color:'var(--coral)', label:'Erro de sync' },
-  [SYNC_STATUS.NO_CONFIG]: { icon:'🔗', color:'var(--blue)', label:'Conectar' },
+const CFG = {
+  [SYNC_STATUS.OFFLINE]:   { icon:'○', color:'var(--sub)' },
+  [SYNC_STATUS.SYNCING]:   { icon:'↻', color:'var(--amber)' },
+  [SYNC_STATUS.SYNCED]:    { icon:'✓', color:'var(--green)' },
+  [SYNC_STATUS.ERROR]:     { icon:'!', color:'var(--coral)' },
+  [SYNC_STATUS.NO_CONFIG]: { icon:'⊕', color:'var(--blue)' },
 }
 
 export default function SyncIndicator({ onOpenSync }) {
-  const { syncStatus, syncInfo, lastSynced } = useFinance()
-  const cfg = STATUS_CONFIG[syncStatus] || STATUS_CONFIG[SYNC_STATUS.NO_CONFIG]
-
-  const timeStr = lastSynced
-    ? lastSynced.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' })
-    : null
+  const { syncStatus, syncInfo } = useFinance()
+  const cfg = CFG[syncStatus] || CFG[SYNC_STATUS.NO_CONFIG]
+  const label = syncInfo?.roomCode ? syncInfo.roomCode : syncStatus === SYNC_STATUS.NO_CONFIG ? 'Conectar' : null
 
   return (
-    <button onClick={onOpenSync}
-      style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px',
-        borderRadius:20, border:`1px solid ${cfg.color}33`, background:`${cfg.color}11`,
-        cursor:'pointer', transition:'.18s' }}>
-      <span style={{ fontSize:13 }}>{cfg.icon}</span>
-      <div style={{ textAlign:'left' }}>
-        <div style={{ fontSize:10, fontWeight:700, color:cfg.color, lineHeight:1 }}>
-          {syncInfo?.roomCode ? `Sala ${syncInfo.roomCode}` : cfg.label}
-        </div>
-        {syncInfo && timeStr && (
-          <div style={{ fontSize:8.5, color:'var(--muted)', lineHeight:1, marginTop:1 }}>
-            {cfg.label} {timeStr}
-          </div>
-        )}
-      </div>
+    <button onClick={onOpenSync} style={{
+      display:'flex', alignItems:'center', gap:5, padding:'6px 11px',
+      borderRadius:20, border:`1px solid ${cfg.color}33`, background:`${cfg.color}0d`,
+      cursor:'pointer', transition:'.15s',
+    }}>
+      <span style={{ fontSize:14, color:cfg.color, fontWeight:700, lineHeight:1 }}>{cfg.icon}</span>
+      {label && (
+        <span style={{ fontSize:11, fontWeight:600, color:cfg.color }}>{label}</span>
+      )}
     </button>
   )
 }
